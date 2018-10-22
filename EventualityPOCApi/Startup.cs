@@ -35,10 +35,9 @@ namespace EventualityPOCApi.Gateway
 
             services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
             services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
-
             services.AddSingleton<HubPublisherWebsocket>();
 
-            // Individual handlers and their dependencies, should be seemlessly replaced by azure functions in the cloud
+            // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
             services.AddSingleton<DocumentClient>(s => new DocumentClient(
                 new Uri(Configuration["CosmosDB:AccountEndpoint"]?.ToString()),
                 Configuration["CosmosDB:AccountKey"]?.ToString()));

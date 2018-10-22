@@ -58,13 +58,13 @@ namespace EventualityPOC.PersonProfileContext.PersonAggregate.Framework
             return lastStatement?.targetData()?.ToObject<Person>() ?? new Person() { Name = "Default person" };
         }
 
-        public async Task SaveDecision(StatementExtension statement)
+        public async Task SaveDecisionAsync(StatementExtension statement)
         {
             statement.prepareToPersist();
             await _documentClient.CreateDocumentAsync(_decisionCollectionUri, statement.ToJObject());
         }
 
-        public async Task SavePerception(StatementExtension statement)
+        public async Task SavePerceptionAsync(StatementExtension statement)
         {
             statement.prepareToPersist();
             await _documentClient.CreateDocumentAsync(_perceptionCollectionUri, statement.ToJObject());

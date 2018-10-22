@@ -20,7 +20,7 @@ namespace EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter
         #region Public
         public async Task Perception(JObject payload)
         {
-            var statementWrapper = new StatementWrapper(this.Context.ConnectionId, payload);
+            var statementWrapper = new StatementWrapper(this.Context.ConnectionId, new Shared.Xapi.StatementExtension(payload));
             await _perceptionChannel.NextAsync(statementWrapper);
         }
         #endregion

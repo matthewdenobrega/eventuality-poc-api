@@ -1,6 +1,7 @@
 using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace EventualityPOCApi.PersonProfileContextTest.PersonAggregate.Domain.PersonTest
 {
@@ -8,11 +9,41 @@ namespace EventualityPOCApi.PersonProfileContextTest.PersonAggregate.Domain.Pers
     public class RetrievePersonTest
     {
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Retrieve_person_should_throw_if_the_perception_statement_does_not_have_a_verb()
+        {
+            var perceptionStatement = new StatementExtension();
+
+            var responseStatement = Person.RetrievePerson(perceptionStatement, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Retrieve_person_should_throw_if_the_perception_statement_verb_is_incorrect()
+        {
+            var perceptionStatement = new StatementExtension()
+            {
+                verb = new TinCan.Verb()
+                {
+                    id = new Uri(Verb.PersonCreationRequested)
+                }
+            };
+
+            var responseStatement = Person.RetrievePerson(perceptionStatement, null);
+        }
+
+        [TestMethod]
         public void Retrieve_person_should_fail_if_the_person_is_not_found()
         {
-            var personRequestedStatement = new StatementExtension();
+            var perceptionStatement = new StatementExtension()
+            {
+                verb = new TinCan.Verb()
+                {
+                    id = new Uri(Verb.PersonRequested)
+                }
+            };
 
-            var responseStatement = Person.RetrievePerson(personRequestedStatement, null);
+            var responseStatement = Person.RetrievePerson(perceptionStatement, null);
 
             Assert.AreEqual(responseStatement.verb.id, Verb.PersonRetrievalFailed);
         }
@@ -20,13 +51,19 @@ namespace EventualityPOCApi.PersonProfileContextTest.PersonAggregate.Domain.Pers
         [TestMethod]
         public void Retrieve_person_should_return_the_person_if_the_person_is_found()
         {
-            var personRequestedStatement = new StatementExtension();
+            var perceptionStatement = new StatementExtension()
+            {
+                verb = new TinCan.Verb()
+                {
+                    id = new Uri(Verb.PersonRequested)
+                }
+            };
             var person = new Person()
             {
                 Name = "Test"
             };
 
-            var responseStatement = Person.RetrievePerson(personRequestedStatement, person);
+            var responseStatement = Person.RetrievePerson(perceptionStatement, person);
 
             Assert.AreEqual(responseStatement.verb.id, Verb.PersonRetrieved);
             Assert.AreEqual(responseStatement.targetData<Person>().Name, person.Name);

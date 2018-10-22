@@ -1,50 +1,42 @@
 ﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace EventualityPOC.PersonProfileContext.PersonAggregate.Application
 {
     public class PersonApplicationService
     {
-        public static JObject PersonCreationRequested(JObject incomingJObject, IPersonRepository personRepository)
+        public static StatementExtension PersonCreationRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
-            var personCreationRequestedStatement = new StatementExtension(incomingJObject);
-            personRepository.SavePerception(personCreationRequestedStatement);
+            personRepository.SavePerceptionAsync(perceptionStatement);
 
-            var person = personCreationRequestedStatement.targetData<Person>();
+            var person = perceptionStatement.targetData<Person>();
             person.PopulateId();
 
-            var responseStatement = person.CreatePerson(personCreationRequestedStatement);
-            personRepository.SaveDecision(responseStatement);
+            var decisionStatement = Person.CreatePerson(perceptionStatement, person);
+            personRepository.SaveDecisionAsync(decisionStatement);
 
-            return responseStatement.ToJObject();
+            return decisionStatement;
         }
 
-        public static JObject PersonRequested(JObject incomingJObject, IPersonRepository personRepository)
+        public static StatementExtension PersonRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
-            var personRequestedStatement = new StatementExtension(incomingJObject);
-
-            var idOfPersonRequested = personRequestedStatement.targetId();
+            var idOfPersonRequested = perceptionStatement.targetId();
             var person = personRepository.RetrievePerson(idOfPersonRequested);
 
-            var responseStatement = Person.RetrievePerson(personRequestedStatement, person);
-
-            return responseStatement.ToJObject();
+            return Person.RetrievePerson(perceptionStatement, person);
         }
 
-        public static JObject PersonUpdateRequested(JObject incomingJObject, IPersonRepository personRepository)
+        public static StatementExtension PersonUpdateRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
-            var personUpdateRequestedStatement = new StatementExtension(incomingJObject);
-            personRepository.SavePerception(personUpdateRequestedStatement);
+            personRepository.SavePerceptionAsync(perceptionStatement);
 
-            var idOfPerson = personUpdateRequestedStatement.targetId();
+            var idOfPerson = perceptionStatement.targetId();
             var person = personRepository.RetrievePerson(idOfPerson);
 
-            var responseStatement = Person.UpdatePerson(personUpdateRequestedStatement, person);
-            personRepository.SaveDecision(responseStatement);
+            var decisionStatement = Person.UpdatePerson(perceptionStatement, person);
+            personRepository.SaveDecisionAsync(decisionStatement);
 
-            return responseStatement.ToJObject();
+            return decisionStatement;
         }
     }
 }

@@ -3,7 +3,6 @@ using EventualityPOCApi.Gateway.BridgeHttp.Channel;
 using EventualityPOCApi.Shared.Framework;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
@@ -44,13 +43,13 @@ namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggrega
         #endregion
 
         #region private
-        private void HandleStatement(StatementWrapper statementWrapper, Func<JObject, IPersonRepository, JObject> handler)
+        private void HandleStatement(StatementWrapper statementWrapper, Func<StatementExtension, IPersonRepository, StatementExtension> handler)
         {
             try
             {
-                var returnJObject = handler(statementWrapper.Data, _personRepository);
-                var returnStatementWrapper = new StatementWrapper(statementWrapper.Subject, returnJObject);
-                _decisionChannel.NextAsync(returnStatementWrapper);
+                var decisionStatement = handler(statementWrapper.Data, _personRepository);
+                var decisionStatementWrapper = new StatementWrapper(statementWrapper.Subject, decisionStatement);
+                _decisionChannel.NextAsync(decisionStatementWrapper);
             }
             catch (Exception exception)
             {

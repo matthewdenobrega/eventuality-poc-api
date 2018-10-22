@@ -8,7 +8,7 @@ namespace EventualityPOC.PersonProfileContext.PersonAggregate.Application
     {
         Task InitializeAsync();
         Person RetrievePerson(string id);
-        Task SaveDecision(StatementExtension statement);
-        Task SavePerception(StatementExtension statement);
+        Task SaveDecisionAsync(StatementExtension statement);
+        Task SavePerceptionAsync(StatementExtension statement);
     }
 }

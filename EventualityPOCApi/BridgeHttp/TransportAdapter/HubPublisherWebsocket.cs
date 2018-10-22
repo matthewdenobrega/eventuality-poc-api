@@ -27,7 +27,7 @@ namespace EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter
         #region private
         private void PushEventToHub(StatementWrapper statementWrapper)
         {
-            _hubSubContext.Clients.Client(statementWrapper.Subject).SendAsync("Decision", statementWrapper.Data);
+            _hubSubContext.Clients.Client(statementWrapper.Subject).SendAsync("Decision", statementWrapper.Data.ToJObject());
         }
         #endregion
     }
