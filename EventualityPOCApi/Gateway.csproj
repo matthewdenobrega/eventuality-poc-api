@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>EventualityPOCApi.Gateway</RootNamespace>
+    <UserSecretsId>494f81c9-db0e-4913-b487-4f6bc1f58932</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

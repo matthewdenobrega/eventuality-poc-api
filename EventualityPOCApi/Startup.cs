@@ -5,7 +5,6 @@ using EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter;
 using EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +38,8 @@ namespace EventualityPOCApi.Gateway
 
             // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
             services.AddSingleton<DocumentClient>(s => new DocumentClient(
-                new Uri(Configuration["CosmosDB:AccountEndpoint"]?.ToString()),
-                Configuration["CosmosDB:AccountKey"]?.ToString()));
+                new Uri(Configuration["CosmosDBAccountEndpoint"]?.ToString()),
+                Configuration["CosmosDBAccountKey"]?.ToString()));
             services.AddSingleton<PersonComponent>();
             services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
         }
