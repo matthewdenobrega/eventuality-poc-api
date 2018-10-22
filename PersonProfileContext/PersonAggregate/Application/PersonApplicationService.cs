@@ -9,42 +9,42 @@ namespace EventualityPOC.PersonProfileContext.PersonAggregate.Application
     {
         public static JObject PersonCreationRequested(JObject incomingJObject, IPersonRepository personRepository)
         {
-            var statementPersonCreationRequested = new StatementExtension(incomingJObject);
-            personRepository.SavePerception(statementPersonCreationRequested);
+            var personCreationRequestedStatement = new StatementExtension(incomingJObject);
+            personRepository.SavePerception(personCreationRequestedStatement);
 
-            var person = statementPersonCreationRequested.targetData<Person>();
+            var person = personCreationRequestedStatement.targetData<Person>();
             person.PopulateId();
 
-            var statementPersonCreated = statementPersonCreationRequested.createSuccessor(
-                new Uri(Verb.PersonCreated), person, person.Id);
-            personRepository.SaveDecision(statementPersonCreated);
+            var responseStatement = person.CreatePerson(personCreationRequestedStatement);
+            personRepository.SaveDecision(responseStatement);
 
-            return statementPersonCreated.ToJObject();
+            return responseStatement.ToJObject();
         }
 
         public static JObject PersonRequested(JObject incomingJObject, IPersonRepository personRepository)
         {
-            var statementPersonRequested = new StatementExtension(incomingJObject);
+            var personRequestedStatement = new StatementExtension(incomingJObject);
 
-            var idOfPersonRequested = statementPersonRequested.targetId();
+            var idOfPersonRequested = personRequestedStatement.targetId();
             var person = personRepository.RetrievePerson(idOfPersonRequested);
 
-            var statementPersonRetrieved = statementPersonRequested.createSuccessor(
-                new Uri(Verb.PersonRetrieved), person);
+            var responseStatement = Person.RetrievePerson(personRequestedStatement, person);
 
-            return statementPersonRetrieved.ToJObject();
+            return responseStatement.ToJObject();
         }
 
         public static JObject PersonUpdateRequested(JObject incomingJObject, IPersonRepository personRepository)
         {
-            var statementPersonUpdateRequested = new StatementExtension(incomingJObject);
-            personRepository.SavePerception(statementPersonUpdateRequested);
+            var personUpdateRequestedStatement = new StatementExtension(incomingJObject);
+            personRepository.SavePerception(personUpdateRequestedStatement);
 
-            var statementPersonUpdated = statementPersonUpdateRequested.createSuccessor(new Uri(Verb.PersonUpdated),
-                statementPersonUpdateRequested.targetData<Person>());
-            personRepository.SaveDecision(statementPersonUpdated);
+            var idOfPerson = personUpdateRequestedStatement.targetId();
+            var person = personRepository.RetrievePerson(idOfPerson);
 
-            return statementPersonUpdated.ToJObject();
+            var responseStatement = Person.UpdatePerson(personUpdateRequestedStatement, person);
+            personRepository.SaveDecision(responseStatement);
+
+            return responseStatement.ToJObject();
         }
     }
 }
