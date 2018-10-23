@@ -1,8 +1,8 @@
-﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
+﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
 using System.Threading.Tasks;
 
-namespace EventualityPOC.PersonProfileContext.PersonAggregate.Application
+namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application
 {
     public interface IPersonRepository
     {

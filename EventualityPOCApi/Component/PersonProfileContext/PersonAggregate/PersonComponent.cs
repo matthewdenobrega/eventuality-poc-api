@@ -1,4 +1,4 @@
-﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Application;
+﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
 using EventualityPOCApi.Gateway.BridgeHttp.Channel;
 using EventualityPOCApi.Shared.Framework;
 using EventualityPOCApi.Shared.Xapi;

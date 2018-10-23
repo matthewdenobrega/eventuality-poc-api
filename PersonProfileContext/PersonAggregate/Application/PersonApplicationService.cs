@@ -1,7 +1,7 @@
-﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
+﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
 
-namespace EventualityPOC.PersonProfileContext.PersonAggregate.Application
+namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application
 {
     public class PersonApplicationService
     {

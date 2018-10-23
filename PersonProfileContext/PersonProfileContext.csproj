@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>EventualityPOC.PersonProfileContext</RootNamespace>
+    <RootNamespace>EventualityPOCApi.Context.PersonProfileContext</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

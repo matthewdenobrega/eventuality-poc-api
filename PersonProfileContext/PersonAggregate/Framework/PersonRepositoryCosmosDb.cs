@@ -1,5 +1,5 @@
-﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Application;
-using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
+﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
+using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EventualityPOC.PersonProfileContext.PersonAggregate.Framework
+namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framework
 {
     public class PersonRepositoryCosmosDb : IPersonRepository
     {

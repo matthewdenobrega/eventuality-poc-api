@@ -1,5 +1,5 @@
-﻿using EventualityPOC.PersonProfileContext.PersonAggregate.Application;
-using EventualityPOC.PersonProfileContext.PersonAggregate.Framework;
+﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
+using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framework;
 using EventualityPOCApi.Gateway.BridgeHttp.Channel;
 using EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter;
 using EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate;
@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,12 @@ namespace EventualityPOCApi.Gateway
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -32,16 +34,29 @@ namespace EventualityPOCApi.Gateway
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
 
-            services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
-            services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
             services.AddSingleton<HubPublisherWebsocket>();
 
-            // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
-            services.AddSingleton<DocumentClient>(s => new DocumentClient(
-                new Uri(Configuration["CosmosDBAccountEndpoint"]?.ToString()),
-                Configuration["CosmosDBAccountKey"]?.ToString()));
-            services.AddSingleton<PersonComponent>();
-            services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
+            // TODO - type configuration handling
+            if (Configuration["EventGridChannels"] == "true")
+            {
+                services.AddSingleton(s => new EventGridClient(
+                    new TopicCredentials(Configuration["EventGridPerceptionTopicKey"]?.ToString())));
+
+                services.AddSingleton<IDecisionChannel, DecisionChannelEventGrid>();
+                services.AddSingleton<IPerceptionChannel, PerceptionChannelEventGrid>();
+            }
+            else
+            {
+                services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
+                services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
+
+                // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
+                services.AddSingleton(s => new DocumentClient(
+                    new Uri(Configuration["CosmosDBAccountEndpoint"]?.ToString()),
+                    Configuration["CosmosDBAccountKey"]?.ToString()));
+                services.AddSingleton<PersonComponent>();
+                services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,11 +89,14 @@ namespace EventualityPOCApi.Gateway
             // Bind outgoing signalR handler
             serviceProvider.GetService<HubPublisherWebsocket>().RegisterOutgoingHandler();
 
-            // Bind individual services
-            serviceProvider.GetService<PersonComponent>().Configure();
+            if (Configuration["EventGridChannels"] != "true")
+            {
+                // Bind individual services
+                serviceProvider.GetService<PersonComponent>().Configure();
 
-            // Initialize repositories - TODO think about a better place for this
-            serviceProvider.GetService<IPersonRepository>().InitializeAsync();
+                // Initialize repositories - TODO think about a better place for this
+                serviceProvider.GetService<IPersonRepository>().InitializeAsync();
+            }
         }
     }
 }

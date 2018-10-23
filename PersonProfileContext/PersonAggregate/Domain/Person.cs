@@ -1,7 +1,7 @@
 ﻿using EventualityPOCApi.Shared.Xapi;
 using System;
 
-namespace EventualityPOC.PersonProfileContext.PersonAggregate.Domain
+namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain
 {
     public class Person
     {

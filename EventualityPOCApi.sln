@@ -13,6 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedTest", "SharedTest\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonProfileContextTest", "PersonProfileContextTest\PersonProfileContextTest.csproj", "{4A9A2EAA-FF76-4A4C-86C4-804D1742D0ED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cloud", "Cloud", "{83AB98B3-8952-488D-91E0-8BC800E83965}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Context", "Context", "{BFFEE720-0DFF-43C9-BF67-479C55D7EA43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonProfileCloud", "PersonProfileCloud\PersonProfileCloud.csproj", "{A74CCC9D-59FC-4C05-B738-B5792C8E294F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +45,18 @@ Global
 		{4A9A2EAA-FF76-4A4C-86C4-804D1742D0ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A9A2EAA-FF76-4A4C-86C4-804D1742D0ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A9A2EAA-FF76-4A4C-86C4-804D1742D0ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A74CCC9D-59FC-4C05-B738-B5792C8E294F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A74CCC9D-59FC-4C05-B738-B5792C8E294F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A74CCC9D-59FC-4C05-B738-B5792C8E294F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A74CCC9D-59FC-4C05-B738-B5792C8E294F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{612CE16A-1B4F-4F61-8101-D1443FF6325D} = {BFFEE720-0DFF-43C9-BF67-479C55D7EA43}
+		{4A9A2EAA-FF76-4A4C-86C4-804D1742D0ED} = {BFFEE720-0DFF-43C9-BF67-479C55D7EA43}
+		{A74CCC9D-59FC-4C05-B738-B5792C8E294F} = {83AB98B3-8952-488D-91E0-8BC800E83965}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A30D7354-688E-4265-BDF7-4898104556F9}

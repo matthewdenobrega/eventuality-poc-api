@@ -1,4 +1,4 @@
-using EventualityPOC.PersonProfileContext.PersonAggregate.Domain;
+using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
