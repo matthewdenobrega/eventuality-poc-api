@@ -34,9 +34,9 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framewo
         public async Task InitializeAsync()
         {
             await _documentClient.CreateDatabaseIfNotExistsAsync(new Database { Id = _databaseName });
-            await _documentClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_databaseName), 
+            await _documentClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_databaseName),
                 new DocumentCollection { Id = _decisionCollectionName });
-            await _documentClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_databaseName), 
+            await _documentClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(_databaseName),
                 new DocumentCollection { Id = _perceptionCollectionName });
         }
 
