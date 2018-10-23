@@ -31,14 +31,14 @@ namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggrega
         public void Configure()
         {
             _perceptionChannel.Observable()
-                .Where(ew => ew.EventType == Verb.PersonCreationRequested)
-                .Subscribe(ew => HandleStatement(ew, PersonApplicationService.PersonCreationRequested));
+                .Where(sw => sw.EventType == Verb.PersonCreationRequested)
+                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonCreationRequested));
             _perceptionChannel.Observable()
-                .Where(ew => ew.EventType == Verb.PersonRequested)
-                .Subscribe(ew => HandleStatement(ew, PersonApplicationService.PersonRequested));
+                .Where(sw => sw.EventType == Verb.PersonRequested)
+                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonRequested));
             _perceptionChannel.Observable()
-                .Where(ew => ew.EventType == Verb.PersonUpdateRequested)
-                .Subscribe(ew => HandleStatement(ew, PersonApplicationService.PersonUpdateRequested));
+                .Where(sw => sw.EventType == Verb.PersonUpdateRequested)
+                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonUpdateRequested));
         }
         #endregion
 
