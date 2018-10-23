@@ -1,8 +1,10 @@
-﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
+﻿using EventualityPOCApi.Channel;
+using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
 using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framework;
-using EventualityPOCApi.Gateway.BridgeHttp.Channel;
-using EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter;
+using EventualityPOCApi.Gateway.Channel;
 using EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate;
+using EventualityPOCApi.Gateway.Configuration;
+using EventualityPOCApi.Gateway.TransportAdapter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,17 +33,21 @@ namespace EventualityPOCApi.Gateway
         {
             services.AddLogging();
 
+            var cosmosDBConfiguration = new CosmosDBConfiguration();
+            Configuration.Bind("CosmosDB", cosmosDBConfiguration);
+            services.AddSingleton(cosmosDBConfiguration);
+            var eventGridConfiguration = new EventGridConfiguration();
+            Configuration.Bind("EventGrid", eventGridConfiguration);
+            services.AddSingleton(eventGridConfiguration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
 
             services.AddSingleton<HubPublisherWebsocket>();
 
-            // TODO - type configuration handling
-            if (Configuration["EventGridChannels"] == "true")
+            if (eventGridConfiguration.Enabled)
             {
-                services.AddSingleton(s => new EventGridClient(
-                    new TopicCredentials(Configuration["EventGridPerceptionTopicKey"]?.ToString())));
-
+                services.AddSingleton(s => new EventGridClient(new TopicCredentials(eventGridConfiguration.PersonProfileContextPerceptionTopicKey)));
                 services.AddSingleton<IDecisionChannel, DecisionChannelEventGrid>();
                 services.AddSingleton<IPerceptionChannel, PerceptionChannelEventGrid>();
             }
@@ -51,9 +57,7 @@ namespace EventualityPOCApi.Gateway
                 services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
 
                 // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
-                services.AddSingleton(s => new DocumentClient(
-                    new Uri(Configuration["CosmosDBAccountEndpoint"]?.ToString()),
-                    Configuration["CosmosDBAccountKey"]?.ToString()));
+                services.AddSingleton(s => new DocumentClient(new Uri(cosmosDBConfiguration.AccountEndpoint), cosmosDBConfiguration.AccountKey));
                 services.AddSingleton<PersonComponent>();
                 services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
             }
@@ -74,24 +78,18 @@ namespace EventualityPOCApi.Gateway
 
             loggerFactory.AddDebug();
 
-            app.UseCors(builder =>
-            {
-                builder.WithOrigins("http://localhost:4200").AllowAnyHeader().WithMethods("GET", "POST").AllowCredentials();
-            });
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().WithMethods("GET", "POST").AllowCredentials());
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<HubSubscriberWebsocket>("/eventHub");
-            });
+            app.UseSignalR(routes => routes.MapHub<HubSubscriberWebsocket>("/eventHub"));
 
             app.UseMvc();
 
             // Bind outgoing signalR handler
             serviceProvider.GetService<HubPublisherWebsocket>().RegisterOutgoingHandler();
 
-            if (Configuration["EventGridChannels"] != "true")
+            if (!serviceProvider.GetService<EventGridConfiguration>().Enabled)
             {
-                // Bind individual services
+                // Bind components
                 serviceProvider.GetService<PersonComponent>().Configure();
 
                 // Initialize repositories - TODO think about a better place for this

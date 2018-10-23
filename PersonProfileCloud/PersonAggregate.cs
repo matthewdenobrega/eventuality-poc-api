@@ -3,11 +3,14 @@ using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framework;
 using EventualityPOCApi.Shared.Framework;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace EventualityPOCApi.Cloud.PersonProfileCloud
 {
@@ -16,6 +19,8 @@ namespace EventualityPOCApi.Cloud.PersonProfileCloud
         private static readonly string _cosmosDBAccountEndpoint = Environment.GetEnvironmentVariable("CosmosDBAccountEndpoint");
         private static readonly string _cosmosDBAccountKey = Environment.GetEnvironmentVariable("CosmosDBAccountKey");
         private static readonly DocumentClient _documentClient = new DocumentClient(new Uri(_cosmosDBAccountEndpoint), _cosmosDBAccountKey);
+        private static readonly EventGridClient _eventGridClient = new EventGridClient(new TopicCredentials(Environment.GetEnvironmentVariable("EventGridDecisionTopicKey")));
+        private static readonly string _eventGridTopicHostName = new Uri("https://personcontext-decision.westeurope-1.eventgrid.azure.net/api/events").Host;
         private static readonly IPersonRepository _personRepository = new PersonRepositoryCosmosDb(_documentClient);
 
         [FunctionName("PersonAggregate")]
@@ -47,7 +52,21 @@ namespace EventualityPOCApi.Cloud.PersonProfileCloud
                 if (decisionStatement == null) return;
 
                 var decisionStatementWrapper = new StatementWrapper(subject, decisionStatement);
-                // _decisionChannel.NextAsync(decisionStatementWrapper);
+
+                var decisionEvents = new List<EventGridEvent>
+                {
+                    new EventGridEvent()
+                    {
+                        Data = decisionStatementWrapper.Data,
+                        DataVersion = decisionStatementWrapper.DataVersion,
+                        EventTime = decisionStatementWrapper.EventTime,
+                        EventType = decisionStatementWrapper.EventType,
+                        Id = decisionStatementWrapper.Id,
+                        Subject = decisionStatementWrapper.Subject,
+                    }
+                };
+
+                _eventGridClient.PublishEventsAsync(_eventGridTopicHostName, decisionEvents);
             }
             catch (Exception exception)
             {

@@ -1,5 +1,5 @@
 ﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
-using EventualityPOCApi.Gateway.BridgeHttp.Channel;
+using EventualityPOCApi.Gateway.Channel;
 using EventualityPOCApi.Shared.Framework;
 using EventualityPOCApi.Shared.Xapi;
 using Microsoft.Extensions.Logging;

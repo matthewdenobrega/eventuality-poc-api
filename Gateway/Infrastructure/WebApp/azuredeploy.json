@@ -8,6 +8,18 @@
     "cosmosDBAccountKey": {
       "type": "string"
     },
+    "eventGridEnabled": {
+      "type": "bool"
+    },
+    "eventGridPersonProfileContextPerceptionTopicKey": {
+      "type": "string"
+    },
+    "eventGridPersonProfileContextPerceptionTopicUrl": {
+      "type": "string"
+    },
+    "eventGridPerceptionTopicKey": {
+      "type": "string"
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -58,12 +70,24 @@
         "siteConfig": {
           "appSettings": [
             {
-              "name": "CosmosDBAccountEndpoint",
+              "name": "CosmosDB:AccountEndpoint",
               "value": "[parameters('cosmosDBAccountEndpoint')]"
             },
             {
-              "name": "CosmosDBAccountKey",
+              "name": "CosmosDB:AccountKey",
               "value": "[parameters('cosmosDBAccountKey')]"
+            },
+            {
+              "name": "EventGrid:Enabled",
+              "value": "[parameters('eventGridEnabled')]"
+            },
+            {
+              "name": "EventGrid:PersonProfileContextPerceptionTopicKey",
+              "value": "[parameters('eventGridPersonProfileContextPerceptionTopicKey')]"
+            },
+            {
+              "name": "EventGrid:PersonProfileContextPerceptionTopicUrl",
+              "value": "[parameters('eventGridPersonProfileContextPerceptionTopicUrl')]"
             }
           ],
           "webSocketsEnabled": true

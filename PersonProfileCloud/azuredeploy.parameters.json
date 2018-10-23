@@ -2,6 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "appName": {
+      "value": "PersonAggregateFunctionDev"
+    },
     "cosmosDBAccountEndpoint": {
       "reference": {
         "keyVault": {
@@ -18,27 +21,13 @@
         "secretName": "cosmosDBAccountKey"
       }
     },
-    "eventGridEnabled": {
-      "value": true
-    },
-    "eventGridPersonProfileContextPerceptionTopicKey": {
+    "eventGridDecisionTopicKey": {
       "reference": {
         "keyVault": {
           "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
-        "secretName": "eventGridPersonProfileContextPerceptionTopicKey"
+        "secretName": "eventGridDecisionTopicKey"
       }
-    },
-    "eventGridPersonProfileContextPerceptionTopicUrl": {
-      "reference": {
-        "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
-        },
-        "secretName": "eventGridPersonProfileContextPerceptionTopicUrl"
-      }
-    },
-    "webAppName": {
-      "value": "eventualitypoc-api-dev"
     }
   }
 }

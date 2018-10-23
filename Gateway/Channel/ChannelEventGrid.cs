@@ -1,33 +1,30 @@
-﻿using EventualityPOCApi.Shared.Framework;
+﻿using EventualityPOCApi.Gateway.Configuration;
+using EventualityPOCApi.Shared.Framework;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
-namespace EventualityPOCApi.Gateway.BridgeHttp.Channel
+namespace EventualityPOCApi.Gateway.Channel
 {
     public class ChannelEventGrid : IChannel
     {
         private readonly EventGridClient _eventGridClient;
-        protected Subject<StatementWrapper> _subject;
-        private readonly string _topicHostName = new Uri("https://personcontext-perception.westeurope-1.eventgrid.azure.net/api/events").Host;
+        private Action<StatementWrapper> _handler;
+        protected string _topicHostName;
         
-            #region Constructor
-        public ChannelEventGrid(EventGridClient eventGridClient)
+        #region Constructor
+        public ChannelEventGrid(EventGridClient eventGridClient, EventGridConfiguration eventGridConfiguration)
         {
             _eventGridClient = eventGridClient;
-            _subject = new Subject<StatementWrapper>();
-
-            // TODO - push to subject when events come in from event grid
         }
         #endregion
 
         #region Public
         public IObservable<StatementWrapper> Observable()
         {
-            return _subject;
+            throw new NotImplementedException(); // Events come in through the EventGridEventHandlerController
         }
 
         public Task NextAsync(StatementWrapper statementWrapper)
@@ -45,12 +42,19 @@ namespace EventualityPOCApi.Gateway.BridgeHttp.Channel
                 }
             };
 
+            TriggerHandler(statementWrapper);
+
             return _eventGridClient.PublishEventsAsync(_topicHostName, events);
         }
 
         public void RegisterHandler(Action<StatementWrapper> handler)
         {
-            _subject.Subscribe(handler);
+            _handler = handler;
+        }
+
+        public void TriggerHandler(StatementWrapper statementWrapper)
+        {
+            if (_handler != null) _handler.Invoke(statementWrapper);
         }
         #endregion
     }
@@ -58,14 +62,20 @@ namespace EventualityPOCApi.Gateway.BridgeHttp.Channel
     public class DecisionChannelEventGrid : ChannelEventGrid, IDecisionChannel
     {
         #region Constructor
-        public DecisionChannelEventGrid(EventGridClient eventGridClient) : base(eventGridClient) { }
+        public DecisionChannelEventGrid(EventGridClient eventGridClient, EventGridConfiguration eventGridConfiguration) : base(eventGridClient, eventGridConfiguration)
+        {
+            // The gateway does not push to the decision channel so the topic host name is not needed here
+        }
         #endregion
     }
 
     public class PerceptionChannelEventGrid : ChannelEventGrid, IPerceptionChannel
     {
         #region Constructor
-        public PerceptionChannelEventGrid(EventGridClient eventGridClient) : base(eventGridClient) { }
+        public PerceptionChannelEventGrid(EventGridClient eventGridClient, EventGridConfiguration eventGridConfiguration) : base(eventGridClient, eventGridConfiguration)
+        {
+            _topicHostName = new Uri(eventGridConfiguration.PersonProfileContextPerceptionTopicUrl).Host;
+        }
         #endregion
     }
 }

@@ -1,13 +1,15 @@
-﻿using EventualityPOCApi.Shared.Framework;
+﻿using EventualityPOCApi.Gateway.Channel;
+using EventualityPOCApi.Shared.Framework;
 using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
-namespace EventualityPOCApi.Gateway.BridgeHttp.Channel
+namespace EventualityPOCApi.Channel
 {
     public class ChannelRx
     {
-        protected Subject<StatementWrapper> _subject;
+        private Action<StatementWrapper> _handler;
+        private readonly Subject<StatementWrapper> _subject;
 
         #region Constructor
         public ChannelRx()
@@ -26,12 +28,21 @@ namespace EventualityPOCApi.Gateway.BridgeHttp.Channel
         {
             _subject.OnNext(statementWrapper);
 
+            TriggerHandler(statementWrapper);
+
             return Task.FromResult<object>(null);
         }
 
         public void RegisterHandler(Action<StatementWrapper> handler)
         {
-            _subject.Subscribe(handler);
+            _handler = handler;
+        }
+
+        public void TriggerHandler(StatementWrapper statementWrapper)
+        {
+            if (_handler == null) throw new InvalidOperationException();
+
+            _handler.Invoke(statementWrapper);
         }
         #endregion
     }

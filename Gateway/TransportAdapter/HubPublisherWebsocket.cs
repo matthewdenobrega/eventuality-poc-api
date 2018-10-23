@@ -1,8 +1,8 @@
-﻿using EventualityPOCApi.Gateway.BridgeHttp.Channel;
+﻿using EventualityPOCApi.Gateway.Channel;
 using EventualityPOCApi.Shared.Framework;
 using Microsoft.AspNetCore.SignalR;
 
-namespace EventualityPOCApi.Gateway.BridgeHttp.TransportAdapter
+namespace EventualityPOCApi.Gateway.TransportAdapter
 {
     public class HubPublisherWebsocket
     {
