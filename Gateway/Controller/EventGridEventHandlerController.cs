@@ -23,9 +23,9 @@ namespace EventGridEventTrigger.DotNetCoreAPIApp.Controllers
 
         [HttpPost]
         [Route("api/EventGridEventHandler")]
-        public JObject Post([FromBody] JObject requestJObject)
+        public IActionResult Post([FromBody] JArray requestJArray)
         {
-            var requestContent = requestJObject.ToString();
+            var requestContent = requestJArray.ToString();
 
             _logger.LogInformation($"Received events: {requestContent}");
 
@@ -44,17 +44,17 @@ namespace EventGridEventTrigger.DotNetCoreAPIApp.Controllers
                         ValidationResponse = eventData.ValidationCode
                     };
 
-                    return new JObject(responseData);
+                    return Ok(responseData);
                 }
                 else
                 {
-                    var statement = new StatementExtension(new JObject(eventGridEvent.Data));
+                    var statement = new StatementExtension((JObject)eventGridEvent.Data);
                     var statementWrapper = new StatementWrapper(eventGridEvent.Subject, statement);
                     _decisionChannel.TriggerHandler(statementWrapper);
                 }
             }
 
-            return null;
+            return Ok(null);
         }
     }
 }

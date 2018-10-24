@@ -7,14 +7,14 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        private const string PersonRootUri = "http://eventuality.poc/person/";
 
         #region Static
         public static StatementExtension CreatePerson(StatementExtension perceptionStatement, Person person)
         {
-            if (perceptionStatement?.verb?.id?.ToString() != Verb.PersonCreationRequested)
-            {
-                throw new ArgumentException("Verb mismatch for creating person");
-            }
+            if (perceptionStatement?.verbString() != Verb.PersonCreationRequested) throw new ArgumentException("Incorrect verb to create person");
+
+            person.PopulateId();
 
             return person?.Name != null ?
                 perceptionStatement.createSuccessor(new Uri(Verb.PersonCreated), person, person.Id) :
@@ -23,10 +23,7 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain
 
         public static StatementExtension RetrievePerson(StatementExtension perceptionStatement, Person person)
         {
-            if (perceptionStatement?.verb?.id?.ToString() != Verb.PersonRequested)
-            {
-                throw new ArgumentException("Verb mismatch for requesting person");
-            }
+            if (perceptionStatement?.verbString() != Verb.PersonRequested) throw new ArgumentException("Incorrect verb to retrieve person");
 
             return person != null ?
                 perceptionStatement.createSuccessor(new Uri(Verb.PersonRetrieved), person) :
@@ -35,10 +32,7 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain
 
         public static StatementExtension UpdatePerson(StatementExtension perceptionStatement, Person person)
         {
-            if (perceptionStatement?.verb?.id?.ToString() != Verb.PersonUpdateRequested)
-            {
-                throw new ArgumentException("Verb mismatch for updating person");
-            }
+            if (perceptionStatement?.verbString() != Verb.PersonUpdateRequested) throw new ArgumentException("Incorrect verb to update person");
 
             return person?.Name != null ?
                 perceptionStatement.createSuccessor(new Uri(Verb.PersonUpdated), person) :
@@ -46,10 +40,10 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain
         }
         #endregion
 
-        #region Public
-        public void PopulateId()
+        #region Private
+        private void PopulateId()
         {
-            Id = Id ?? "http://eventuality.poc/person/" + Guid.NewGuid().ToString();
+            Id = Id ?? PersonRootUri + Guid.NewGuid().ToString();
         }
         #endregion
     }

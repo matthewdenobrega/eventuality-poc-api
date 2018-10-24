@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "personContextDecisionSubscriptionName": {
+      "value": "personcontext-decision-subscription-dev"
+    },
+    "personContextDecisionSubscriptionUrl": {
+      "value": "https://eventualitypoc-api-dev-wa.azurewebsites.net/api/EventGridEventHandler"
+    },
+    "personContextDecisionTopicName": {
+      "value": "personcontext-decision-dev"
+    },
+    "personContextPerceptionSubscriptionName": {
+      "value": "personcontext-perception-subscription-dev"
+    },
+    "personContextPerceptionSubscriptionUrl": {
+      "value": "https://eventualitypoc-fn-personaggregate-dev.azurewebsites.net/runtime/webhooks/EventGrid?functionName=PersonAggregate"
+    },
+    "personContextPerceptionTopicName": {
+      "value": "personcontext-perception-dev"
+    }
+  }
+}

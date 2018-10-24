@@ -22,45 +22,27 @@ namespace EventualityPOCApi.Gateway
     {
         public IConfiguration Configuration { get; }
 
+        #region Constructor
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+        #endregion
 
+        #region Public
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
 
-            var cosmosDBConfiguration = new CosmosDBConfiguration();
-            Configuration.Bind("CosmosDB", cosmosDBConfiguration);
-            services.AddSingleton(cosmosDBConfiguration);
-            var eventGridConfiguration = new EventGridConfiguration();
-            Configuration.Bind("EventGrid", eventGridConfiguration);
-            services.AddSingleton(eventGridConfiguration);
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddSignalR();
 
             services.AddSingleton<HubPublisherWebsocket>();
 
-            if (eventGridConfiguration.Enabled)
-            {
-                services.AddSingleton(s => new EventGridClient(new TopicCredentials(eventGridConfiguration.PersonProfileContextPerceptionTopicKey)));
-                services.AddSingleton<IDecisionChannel, DecisionChannelEventGrid>();
-                services.AddSingleton<IPerceptionChannel, PerceptionChannelEventGrid>();
-            }
-            else
-            {
-                services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
-                services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
-
-                // Individual components and their dependencies, should be seemlessly replaced by azure functions in the cloud
-                services.AddSingleton(s => new DocumentClient(new Uri(cosmosDBConfiguration.AccountEndpoint), cosmosDBConfiguration.AccountKey));
-                services.AddSingleton<PersonComponent>();
-                services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
-            }
+            AddGatewayServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,7 +66,40 @@ namespace EventualityPOCApi.Gateway
 
             app.UseMvc();
 
-            // Bind outgoing signalR handler
+            ConfigureGatewayServices(serviceProvider);
+        }
+        #endregion
+
+        #region Private
+        private void AddGatewayServices(IServiceCollection services)
+        {
+            var cosmosDBConfiguration = new CosmosDBConfiguration();
+            Configuration.Bind("CosmosDB", cosmosDBConfiguration);
+            services.AddSingleton(cosmosDBConfiguration);
+            var eventGridConfiguration = new EventGridConfiguration();
+            Configuration.Bind("EventGrid", eventGridConfiguration);
+            services.AddSingleton(eventGridConfiguration);
+
+            if (eventGridConfiguration.Enabled)
+            {
+                services.AddSingleton(s => new EventGridClient(new TopicCredentials(eventGridConfiguration.PersonProfileContextPerceptionTopicKey)));
+                services.AddSingleton<IDecisionChannel, DecisionChannelEventGrid>();
+                services.AddSingleton<IPerceptionChannel, PerceptionChannelEventGrid>();
+            }
+            else
+            {
+                services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
+                services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
+
+                // Individual components and their dependencies, seemlessly replaced by Azure functions in the cloud
+                services.AddSingleton(s => new DocumentClient(new Uri(cosmosDBConfiguration.AccountEndpoint), cosmosDBConfiguration.AccountKey));
+                services.AddSingleton<PersonComponent>();
+                services.AddSingleton<IPersonRepository, PersonRepositoryCosmosDb>();
+            }
+        }
+
+        private void ConfigureGatewayServices(IServiceProvider serviceProvider)
+        {
             serviceProvider.GetService<HubPublisherWebsocket>().RegisterOutgoingHandler();
 
             if (!serviceProvider.GetService<EventGridConfiguration>().Enabled)
@@ -96,5 +111,6 @@ namespace EventualityPOCApi.Gateway
                 serviceProvider.GetService<IPersonRepository>().InitializeAsync();
             }
         }
+        #endregion
     }
 }

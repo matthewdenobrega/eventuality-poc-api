@@ -60,12 +60,16 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framewo
 
         public async Task SaveDecisionAsync(StatementExtension statement)
         {
+            if (statement == null) return;
+
             statement.prepareToPersist();
             await _documentClient.CreateDocumentAsync(_decisionCollectionUri, statement.ToJObject());
         }
 
         public async Task SavePerceptionAsync(StatementExtension statement)
         {
+            if (statement == null) return;
+
             statement.prepareToPersist();
             await _documentClient.CreateDocumentAsync(_perceptionCollectionUri, statement.ToJObject());
         }

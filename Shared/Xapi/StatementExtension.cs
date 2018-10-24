@@ -69,6 +69,11 @@ namespace EventualityPOCApi.Shared.Xapi
         {
             return ((Activity)target)?.id;
         }
+
+        public string verbString()
+        {
+            return verb?.id?.ToString();
+        }
         #endregion
 
         #region Private

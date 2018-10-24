@@ -1,24 +1,46 @@
 ﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Domain;
 using EventualityPOCApi.Shared.Xapi;
+using System.Threading.Tasks;
 
 namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application
 {
     public class PersonApplicationService
     {
-        public static StatementExtension PersonCreationRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
+        #region Public
+        public static async Task<StatementExtension> MakeDecisionAsync(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
-            personRepository.SavePerceptionAsync(perceptionStatement);
+            await personRepository.SavePerceptionAsync(perceptionStatement);
 
-            var person = perceptionStatement.targetData<Person>();
-            person.PopulateId();
+            StatementExtension decisionStatement = null;
 
-            var decisionStatement = Person.CreatePerson(perceptionStatement, person);
-            personRepository.SaveDecisionAsync(decisionStatement);
+            switch (perceptionStatement?.verb?.id?.ToString())
+            {
+                case Verb.PersonCreationRequested:
+                    decisionStatement = PersonCreationRequested(perceptionStatement, personRepository);
+                    break;
+                case Verb.PersonRequested:
+                    decisionStatement = PersonRequested(perceptionStatement, personRepository);
+                    break;
+                case Verb.PersonUpdateRequested:
+                    decisionStatement = PersonUpdateRequested(perceptionStatement, personRepository);
+                    break;
+            }
+
+            await personRepository.SaveDecisionAsync(decisionStatement);
 
             return decisionStatement;
         }
+        #endregion
 
-        public static StatementExtension PersonRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
+        #region Private
+        private static StatementExtension PersonCreationRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
+        {
+            var person = perceptionStatement.targetData<Person>();
+
+            return Person.CreatePerson(perceptionStatement, person);
+        }
+
+        private static StatementExtension PersonRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
             var idOfPersonRequested = perceptionStatement.targetId();
             var person = personRepository.RetrievePerson(idOfPersonRequested);
@@ -26,17 +48,13 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Applica
             return Person.RetrievePerson(perceptionStatement, person);
         }
 
-        public static StatementExtension PersonUpdateRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
+        private static StatementExtension PersonUpdateRequested(StatementExtension perceptionStatement, IPersonRepository personRepository)
         {
-            personRepository.SavePerceptionAsync(perceptionStatement);
-
             var idOfPerson = perceptionStatement.targetId();
             var person = personRepository.RetrievePerson(idOfPerson);
 
-            var decisionStatement = Person.UpdatePerson(perceptionStatement, person);
-            personRepository.SaveDecisionAsync(decisionStatement);
-
-            return decisionStatement;
+            return Person.UpdatePerson(perceptionStatement, person);
         }
+        #endregion
     }
 }

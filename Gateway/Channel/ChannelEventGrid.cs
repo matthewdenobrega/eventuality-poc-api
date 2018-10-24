@@ -33,7 +33,7 @@ namespace EventualityPOCApi.Gateway.Channel
             {
                 new EventGridEvent()
                 {
-                    Data = statementWrapper.Data,
+                    Data = statementWrapper.Data.ToJObject(),
                     DataVersion = statementWrapper.DataVersion,
                     EventTime = statementWrapper.EventTime,
                     EventType = statementWrapper.EventType,

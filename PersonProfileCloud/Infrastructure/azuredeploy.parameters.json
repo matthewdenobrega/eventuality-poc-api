@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "PersonAggregateFunctionDev"
+      "value": "eventualitypoc-fn-personaggregate-dev"
     },
     "cosmosDBAccountEndpoint": {
       "reference": {
@@ -26,8 +26,11 @@
         "keyVault": {
           "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
-        "secretName": "eventGridDecisionTopicKey"
+        "secretName": "eventGridPersonProfileContextDecisionTopicKey"
       }
+    },
+    "eventGridDecisionTopicUrl": {
+      "value": "https://personcontext-decision-dev.westeurope-1.eventgrid.azure.net/api/events"
     }
   }
 }

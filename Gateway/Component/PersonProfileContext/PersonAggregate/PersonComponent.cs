@@ -1,11 +1,10 @@
 ﻿using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
 using EventualityPOCApi.Gateway.Channel;
 using EventualityPOCApi.Shared.Framework;
-using EventualityPOCApi.Shared.Xapi;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate
 {
@@ -30,26 +29,19 @@ namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggrega
         #region Public
         public void Configure()
         {
-            _perceptionChannel.Observable()
-                .Where(sw => sw.EventType == Verb.PersonCreationRequested)
-                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonCreationRequested));
-            _perceptionChannel.Observable()
-                .Where(sw => sw.EventType == Verb.PersonRequested)
-                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonRequested));
-            _perceptionChannel.Observable()
-                .Where(sw => sw.EventType == Verb.PersonUpdateRequested)
-                .Subscribe(sw => HandleStatement(sw, PersonApplicationService.PersonUpdateRequested));
+            // Note - the subscription should be set up to filter appropriately - can put extra checks here if needed
+            _perceptionChannel.Observable().Subscribe(async sw => await HandleStatement(sw));
         }
         #endregion
 
         #region private
-        private void HandleStatement(StatementWrapper statementWrapper, Func<StatementExtension, IPersonRepository, StatementExtension> handler)
+        private async Task HandleStatement(StatementWrapper statementWrapper)
         {
             try
             {
-                var decisionStatement = handler(statementWrapper.Data, _personRepository);
+                var decisionStatement = await PersonApplicationService.MakeDecisionAsync(statementWrapper.Data, _personRepository);
                 var decisionStatementWrapper = new StatementWrapper(statementWrapper.Subject, decisionStatement);
-                _decisionChannel.NextAsync(decisionStatementWrapper);
+                await _decisionChannel.NextAsync(decisionStatementWrapper);
             }
             catch (Exception exception)
             {
