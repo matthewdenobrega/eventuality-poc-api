@@ -46,10 +46,39 @@ namespace EventualityPOCApi.Shared.Xapi
             return successorStatement;
         }
 
+        public StatementExtension createSuccessor(string verbId, object targetData, string targetId = null)
+        {
+            return createSuccessor(new Uri(verbId), targetData, targetId);
+        }
+
         public void prepareToPersist()
         {
             id = id ?? Guid.NewGuid();
             stored = DateTime.Now;
+        }
+
+        public void populateTarget(object targetData, string targetId = null)
+        {
+            var activity = (Activity)target ?? new Activity();
+
+            if (targetId != null)
+            {
+                activity.id = targetId;
+            }
+
+            if (targetData != null)
+            {
+                var targetDataJObject = convertTargetToJobject(targetData);
+
+                activity.definition = activity.definition ?? new ActivityDefinition();
+                var extensionsJObject = new JObject
+            {
+                { $"{ActivityDefinitionDataExtension}", targetDataJObject }
+            };
+                activity.definition.extensions = new TinCan.Extensions(extensionsJObject);
+            }
+
+            target = activity;
         }
 
         public JObject targetData()
@@ -101,30 +130,6 @@ namespace EventualityPOCApi.Shared.Xapi
             }
 
             return successorContext;
-        }
-
-        private void populateTarget(object targetData, string targetId = null)
-        {
-            var activity = (Activity)target ?? new Activity();
-
-            if (targetId != null)
-            {
-                activity.id = targetId;
-            }
-
-            if (targetData != null)
-            {
-                var targetDataJObject = convertTargetToJobject(targetData);
-
-                activity.definition = activity.definition ?? new ActivityDefinition();
-                var extensionsJObject = new JObject
-            {
-                { $"{ActivityDefinitionDataExtension}", targetDataJObject }
-            };
-                activity.definition.extensions = new TinCan.Extensions(extensionsJObject);
-            }
-
-            target = activity;
         }
 
         private JObject convertTargetToJobject(object targetData)

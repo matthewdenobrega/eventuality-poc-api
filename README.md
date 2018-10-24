@@ -5,8 +5,8 @@
 This is a proof-of-concept for a [full-stack event-based architecture](https://medium.com/@matt.denobrega/state-vs-event-based-web-architectures-59ab1f47656b).
 Everything from the UI to the persistence layer, and from low-level transport to business logic, works with normalized events.
 
-This is also partially an exploration of how to develop, deploy, and manage a serverless web application. 
-For more context on the information flow and design decisions, see [TBC]().
+This is also partially an exploration of how to develop, deploy, and manage a serverless web application, and as such is significantly more complex than justified by the scope. 
+For more context on the design decisions and information flow, see [TBC]().
 
 The scope of this POC is extremely limited - creating and saving Person instances.
 
@@ -47,7 +47,7 @@ The solution is designed to run both as an in-process monolith and as a distribu
 * The Shared project includes core classes that are used across the other projects
 * There are separate Test projects where needed
 
-While this level of complexity is overkill for the very limited scope, this structure and deployment should be able to seamlessly scale to much larger applications.
+While this level of complexity is overkill for the very limited scope, this structure and deployment should scale to much larger applications.
 
 ## Running the tests
 

@@ -39,7 +39,7 @@ namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggrega
         {
             try
             {
-                var decisionStatement = await PersonApplicationService.MakeDecisionAsync(statementWrapper.Data, _personRepository);
+                var decisionStatement = await new PersonApplicationService().MakeDecisionAsync(statementWrapper.Data, _personRepository);
                 var decisionStatementWrapper = new StatementWrapper(statementWrapper.Subject, decisionStatement);
                 await _decisionChannel.NextAsync(decisionStatementWrapper);
             }

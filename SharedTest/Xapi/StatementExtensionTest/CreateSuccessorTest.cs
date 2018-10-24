@@ -9,7 +9,7 @@ namespace EventualityPOCApi.SharedTest.Xapi.StatementExtensionTest
     [TestClass]
     public class CreateSuccessorTest
     {
-        private readonly Uri VerbId = new Uri(Shared.Xapi.Verb.Test);
+        private readonly Uri VerbId = new Uri(Shared.Xapi.Verb.SystemTest);
 
         [TestMethod]
         public void Create_successor_should_not_return_the_precursor()

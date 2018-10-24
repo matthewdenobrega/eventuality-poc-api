@@ -55,7 +55,7 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framewo
 
             var lastStatement = new StatementExtension(lastJObject);
 
-            return lastStatement?.targetData()?.ToObject<Person>() ?? new Person() { Name = "Default person" };
+            return lastStatement?.targetData()?.ToObject<Person>();
         }
 
         public async Task SaveDecisionAsync(StatementExtension statement)
@@ -63,6 +63,7 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framewo
             if (statement == null) return;
 
             statement.prepareToPersist();
+
             await _documentClient.CreateDocumentAsync(_decisionCollectionUri, statement.ToJObject());
         }
 
@@ -71,6 +72,7 @@ namespace EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framewo
             if (statement == null) return;
 
             statement.prepareToPersist();
+
             await _documentClient.CreateDocumentAsync(_perceptionCollectionUri, statement.ToJObject());
         }
         #endregion

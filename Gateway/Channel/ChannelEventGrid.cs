@@ -29,20 +29,9 @@ namespace EventualityPOCApi.Gateway.Channel
 
         public Task NextAsync(StatementWrapper statementWrapper)
         {
-            var events = new List<EventGridEvent>
-            {
-                new EventGridEvent()
-                {
-                    Data = statementWrapper.Data.ToJObject(),
-                    DataVersion = statementWrapper.DataVersion,
-                    EventTime = statementWrapper.EventTime,
-                    EventType = statementWrapper.EventType,
-                    Id = statementWrapper.Id,
-                    Subject = statementWrapper.Subject,
-                }
-            };
-
             TriggerHandler(statementWrapper);
+
+            var events = CreateEventGridEventList(statementWrapper);
 
             return _eventGridClient.PublishEventsAsync(_topicHostName, events);
         }
@@ -55,6 +44,26 @@ namespace EventualityPOCApi.Gateway.Channel
         public void TriggerHandler(StatementWrapper statementWrapper)
         {
             if (_handler != null) _handler.Invoke(statementWrapper);
+        }
+        #endregion
+
+        #region private
+        private List<EventGridEvent> CreateEventGridEventList(StatementWrapper statementWrapper)
+        {
+            if (statementWrapper == null) return new List<EventGridEvent>();
+
+            return new List<EventGridEvent>
+                {
+                    new EventGridEvent()
+                    {
+                        Data = statementWrapper.Data.ToJObject(),
+                        DataVersion = statementWrapper.DataVersion,
+                        EventTime = statementWrapper.EventTime,
+                        EventType = statementWrapper.EventType,
+                        Id = statementWrapper.Id,
+                        Subject = statementWrapper.Subject,
+                    }
+                };
         }
         #endregion
     }

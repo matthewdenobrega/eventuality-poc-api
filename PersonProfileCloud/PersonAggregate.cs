@@ -31,7 +31,8 @@ namespace EventualityPOCApi.Cloud.PersonProfileCloud
             {
                 var perceptionStatement = new StatementExtension((JObject)eventGridEvent.Data);
 
-                StatementExtension decisionStatement = await PersonApplicationService.MakeDecisionAsync(perceptionStatement, _personRepository);
+                StatementExtension decisionStatement = await new PersonApplicationService().MakeDecisionAsync(perceptionStatement, 
+                    _personRepository);
 
                 var decisionEvents = CreateEventGridEventList(new StatementWrapper(eventGridEvent.Subject, decisionStatement));
 
@@ -46,6 +47,8 @@ namespace EventualityPOCApi.Cloud.PersonProfileCloud
 
         private static List<EventGridEvent> CreateEventGridEventList(StatementWrapper statementWrapper)
         {
+            if (statementWrapper == null) return new List<EventGridEvent>();
+
             return new List<EventGridEvent>
                 {
                     new EventGridEvent()
