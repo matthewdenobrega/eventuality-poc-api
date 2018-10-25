@@ -80,19 +80,15 @@ After deploying, publish the Gateway and PersonProfileCloud projects to their ap
 
 Expanded from [Microsoft's best practices](https://docs.microsoft.com/en-us/azure/architecture/best-practices/naming-conventions).
 
-General pattern: <solution>-<rg>-<bc?>-<aggregate?>-<description?>-<environment>-<resource>
+solution-rg-context?-aggregate?-description?-environment-resource
 
-rg - resource group, bc - bounded context (an acronym can be used here, eg ppc for person prfile context)
+Were rg = resource group
 
-eventualitypoc-gateway-dev-rg (gateway dev resource group)
-
-eventualitypoc-gateway-dev-wa (gateway dev web app)
-
-eventualitypoc-eventgrid-ppc-perception-dev-egt (dev event grid person profile context perception topic)
-
-eventualitypoc-cloud-ppc-person-dev-func (dev person profile context person azure function)
-
-Exception - eventualitypoc-dev-kv (dev keyvault) (24 character limit for key vault name)
+* eventualitypoc-gateway-dev-rg (gateway dev resource group)
+* eventualitypoc-gateway-dev-wa (gateway dev web app)
+* eventualitypoc-eventgrid-ppc-perception-dev-egt (dev event grid person profile context perception topic)
+* eventualitypoc-cloud-ppc-person-dev-func (dev person profile context person azure function)
+* Exception - eventualitypoc-dev-kv (dev keyvault) (24 character limit for key vault name)
 
 ## Built With
 
