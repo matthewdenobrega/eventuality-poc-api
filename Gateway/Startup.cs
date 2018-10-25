@@ -2,7 +2,7 @@
 using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Application;
 using EventualityPOCApi.Context.PersonProfileContext.PersonAggregate.Framework;
 using EventualityPOCApi.Gateway.Channel;
-using EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate;
+using EventualityPOCApi.Gateway.Component.PersonProfileContext;
 using EventualityPOCApi.Gateway.Configuration;
 using EventualityPOCApi.Gateway.TransportAdapter;
 using Microsoft.AspNetCore.Builder;

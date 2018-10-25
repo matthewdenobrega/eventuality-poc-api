@@ -3,12 +3,12 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "eventualitypoc-fn-personaggregate-dev"
+      "value": "eventualitypoc-cloud-ppc-person-dev-func"
     },
     "cosmosDBAccountEndpoint": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "cosmosDBAccountEndpoint"
       }
@@ -16,7 +16,7 @@
     "cosmosDBAccountKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "cosmosDBAccountKey"
       }
@@ -24,13 +24,18 @@
     "eventGridDecisionTopicKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "eventGridPersonProfileContextDecisionTopicKey"
       }
     },
     "eventGridDecisionTopicUrl": {
-      "value": "https://personcontext-decision-dev.westeurope-1.eventgrid.azure.net/api/events"
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+        },
+        "secretName": "eventGridPersonProfileContextDecisionTopicUrl"
+      }
     }
   }
 }

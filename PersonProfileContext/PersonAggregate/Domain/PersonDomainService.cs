@@ -31,12 +31,14 @@ namespace PersonProfileContext.PersonAggregate.Domain
                 perceptionStatement.createSuccessor(Verb.PersonRetrievalFailed, null);
         }
 
-        public StatementExtension UpdatePersonDecider(StatementExtension perceptionStatement, Person person)
+        public StatementExtension UpdatePersonDecider(StatementExtension perceptionStatement, Person personToUpdate)
         {
-            if (perceptionStatement?.verbString() != Verb.PersonUpdateRequested) throw new InvalidOperationException("Incorrect verb to update person");
+            if (perceptionStatement?.verbString() != Verb.PersonUpdateRequested) throw new InvalidOperationException("Incorrect verb to update person");           
 
-            return person?.Name != null ?
-                perceptionStatement.createSuccessor(Verb.PersonUpdated, person) :
+            var updatedPerson = perceptionStatement.targetData<Person>();
+
+            return personToUpdate != null && updatedPerson?.Name != null ?
+                perceptionStatement.createSuccessor(Verb.PersonUpdated, updatedPerson) :
                 perceptionStatement.createSuccessor(Verb.PersonUpdateFailed, null);
         }
         #endregion

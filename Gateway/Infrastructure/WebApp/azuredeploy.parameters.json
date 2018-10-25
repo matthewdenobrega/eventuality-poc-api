@@ -5,7 +5,7 @@
     "cosmosDBAccountEndpoint": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "cosmosDBAccountEndpoint"
       }
@@ -13,7 +13,7 @@
     "cosmosDBAccountKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "cosmosDBAccountKey"
       }
@@ -24,7 +24,7 @@
     "eventGridPersonProfileContextPerceptionTopicKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "eventGridPersonProfileContextPerceptionTopicKey"
       }
@@ -32,13 +32,13 @@
     "eventGridPersonProfileContextPerceptionTopicUrl": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-kv-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
+          "id": "/subscriptions/479dfc82-609f-49fc-a59e-0275dbcecc87/resourceGroups/eventualitypoc-keyvault-rg/providers/Microsoft.KeyVault/vaults/eventualitypoc-dev-kv"
         },
         "secretName": "eventGridPersonProfileContextPerceptionTopicUrl"
       }
     },
     "webAppName": {
-      "value": "eventualitypoc-api-dev"
+      "value": "eventualitypoc-gateway-dev-wa"
     }
   }
 }

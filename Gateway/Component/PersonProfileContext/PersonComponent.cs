@@ -6,7 +6,7 @@ using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace EventualityPOCApi.Gateway.Component.PersonProfileContext.PersonAggregate
+namespace EventualityPOCApi.Gateway.Component.PersonProfileContext
 {
     public class PersonComponent
     {

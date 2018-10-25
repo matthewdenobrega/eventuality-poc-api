@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace EventualityPOCApi.Cloud.PersonProfileCloud
 {
-    public static class PersonAggregate
+    public static class PersonComponent
     {
         private static readonly string _cosmosDBAccountEndpoint = Environment.GetEnvironmentVariable("CosmosDBAccountEndpoint");
         private static readonly string _cosmosDBAccountKey = Environment.GetEnvironmentVariable("CosmosDBAccountKey");
@@ -24,7 +24,7 @@ namespace EventualityPOCApi.Cloud.PersonProfileCloud
         private static readonly string _eventGridTopicHostName = new Uri(Environment.GetEnvironmentVariable("EventGridDecisionTopicUrl")).Host;
         private static readonly IPersonRepository _personRepository = new PersonRepositoryCosmosDb(_documentClient);
 
-        [FunctionName("PersonAggregate")]
+        [FunctionName("PersonComponent")]
         public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent, ILogger logger)
         {
             try

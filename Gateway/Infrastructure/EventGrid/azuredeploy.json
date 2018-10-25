@@ -2,29 +2,10 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "personContextDecisionSubscriptionName": {
+    "personProfileContextDecisionTopicName": {
       "type": "string"
     },
-    "personContextDecisionSubscriptionUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "The webhook URL to send the subscription events to. This URL must be valid and must be prepared to accept the Event Grid webhook URL challenge request. (RequestBin URLs are exempt from this requirement.)"
-      }
-    },
-    "personContextDecisionTopicName": {
-      "type": "string"
-    },
-    "personContextPerceptionSubscriptionName": {
-      "defaultValue": "personcontext-perception-subscription",
-      "type": "string"
-    },
-    "personContextPerceptionSubscriptionUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "The webhook URL to send the subscription events to. This URL must be valid and must be prepared to accept the Event Grid webhook URL challenge request. (RequestBin URLs are exempt from this requirement.)"
-      }
-    },
-    "personContextPerceptionTopicName": {
+    "personProfileContextPerceptionTopicName": {
       "type": "string"
     },
     "location": {
@@ -36,58 +17,14 @@
     {
       "apiVersion": "2018-01-01",
       "location": "[parameters('location')]",
-      "name": "[parameters('personContextDecisionTopicName')]",
+      "name": "[parameters('personProfileContextDecisionTopicName')]",
       "type": "Microsoft.EventGrid/topics"
     },
     {
       "apiVersion": "2018-01-01",
       "location": "[parameters('location')]",
-      "name": "[parameters('personContextPerceptionTopicName')]",
+      "name": "[parameters('personProfileContextPerceptionTopicName')]",
       "type": "Microsoft.EventGrid/topics"
-    },
-    {
-      "apiVersion": "2018-01-01",
-      "dependsOn": [
-        "[parameters('personContextDecisionTopicName')]"
-      ],
-      "location": "[parameters('location')]",
-      "name": "[concat(parameters('personContextDecisionTopicName'), '/Microsoft.EventGrid/', parameters('personContextDecisionSubscriptionName'))]",
-      "properties": {
-        "destination": {
-          "endpointType": "WebHook",
-          "properties": {
-            "endpointUrl": "[parameters('personContextDecisionSubscriptionUrl')]"
-          }
-        },
-        "filter": {
-          "includedEventTypes": [
-            "All"
-          ]
-        }
-      },
-      "type": "Microsoft.EventGrid/topics/providers/eventSubscriptions"
-    },
-    {
-      "apiVersion": "2018-01-01",
-      "dependsOn": [
-        "[parameters('personContextPerceptionTopicName')]"
-      ],
-      "location": "[parameters('location')]",
-      "name": "[concat(parameters('personContextPerceptionTopicName'), '/Microsoft.EventGrid/', parameters('personContextPerceptionSubscriptionName'))]",
-      "properties": {
-        "destination": {
-          "endpointType": "WebHook",
-          "properties": {
-            "endpointUrl": "[parameters('personContextPerceptionSubscriptionUrl')]"
-          }
-        },
-        "filter": {
-          "includedEventTypes": [
-            "All"
-          ]
-        }
-      },
-      "type": "Microsoft.EventGrid/topics/providers/eventSubscriptions"
     }
   ]
 }

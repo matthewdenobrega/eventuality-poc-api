@@ -2,15 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "name": {
-      "value": "eventualitypoc-kv"
-    },
-    "location": {
-      "value": "westeurope"
-    },
-    "sku": {
-      "value": "Standard"
-    },
     "accessPolicies": {
       "value": [
         {
@@ -58,17 +49,17 @@
         }
       ]
     },
-    "tenant": {
-      "value": "7d0efb0e-2cfe-4800-ae9c-0a5e08d2e734"
-    },
     "enabledForDeployment": {
+      "value": false
+    },
+    "enabledForDiskEncryption": {
       "value": false
     },
     "enabledForTemplateDeployment": {
       "value": true
     },
-    "enabledForDiskEncryption": {
-      "value": false
+    "location": {
+      "value": "westeurope"
     },
     "networkAcls": {
       "value": {
@@ -77,6 +68,15 @@
         "virtualNetworkRules": [],
         "ipRules": []
       }
+    },
+    "sku": {
+      "value": "Standard"
+    },
+    "tenant": {
+      "value": "7d0efb0e-2cfe-4800-ae9c-0a5e08d2e734"
+    },
+    "vaultName": {
+      "value": "eventualitypoc-dev-kv"
     }
   }
 }

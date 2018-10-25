@@ -56,7 +56,7 @@ Run all the tests in the solution - the tests are written with MSTest and should
 ## Deployment
 
 The application is set up to run on event grid and functions on Azure.
-The cloud deployment uses five resource groups, to separate out different resource life cycles:
+The cloud deployment uses five resource groups, to separate out different resource life cycles - the buttons deploy the dev environment:
 
 * One for the Key vault [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmatthewdenobrega%2Feventuality-poc-api%2Fmaster%2FGateway%2FInfrastructure%2FKeyVault%2Fazuredeploy.json)
 * One for the CosmosDB [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmatthewdenobrega%2Feventuality-poc-api%2Fmaster%2FGateway%2FInfrastructure%2FDatabase%2Fazuredeploy.json)
@@ -65,15 +65,28 @@ The cloud deployment uses five resource groups, to separate out different resour
 * One for the Azure functions for each bounded context [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmatthewdenobrega%2Feventuality-poc-api%2Fmaster%2FPersonProfileCloud%2FInfrastructure%2Fazuredeploy.json)
 
 The event grid and functions resources are not needed if running as an in-process monolith. 
-There are some dependencies between resources which need to be set in the key vault:
+There are some dependencies between resources which need to be set in the key vault after the database and event grid are deployed:
 
 * cosmosDBAccountEndpoint
 * cosmosDBAccountKey
 * eventGridPersonProfileContextDecisionTopicKey
+* eventGridPersonProfileContextDecisionTopicUrl
 * eventGridPersonProfileContextPerceptionTopicKey
 * eventGridPersonProfileContextPerceptionTopicUrl
 
 After deploying, publish the Gateway and PersonProfileCloud projects to their app services.
+
+## Naming convention for azure resources
+
+Expanded from [Microsoft's best practices](https://docs.microsoft.com/en-us/azure/architecture/best-practices/naming-conventions).
+
+General pattern: <solution>-<resource group>-<bounded context acronym?>-<aggregate?>-<description?>-<environment>-<resource type>
+
+eventualitypoc-gateway-dev-rg (gateway dev resource group)
+eventualitypoc-gateway-dev-wa (gateway dev web app)
+eventualitypoc-eventgrid-ppc-perception-dev-egt (dev event grid person profile context perception topic)
+eventualitypoc-cloud-ppc-person-dev-func (dev person profile context person azure function)
+Exception - eventualitypoc-dev-kv (dev keyvault) (24 character limit for key vault name)
 
 ## Built With
 

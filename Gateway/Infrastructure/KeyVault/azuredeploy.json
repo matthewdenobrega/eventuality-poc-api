@@ -2,69 +2,69 @@
   "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "name": {
-      "type": "String"
+    "accessPolicies": {
+      "defaultValue": [],
+      "metadata": {
+        "description": "The access policies defined for this vault."
+      },
+      "type": "array"
+    },
+    "enabledForDeployment": {
+      "type": "bool"
+    },
+    "enabledForDiskEncryption": {
+      "type": "bool"
+    },
+    "enabledForTemplateDeployment": {
+      "type": "bool"
     },
     "location": {
-      "type": "String"
+      "type": "string"
+    },
+    "networkAcls": {
+      "type": "object",
+      "metadata": {
+        "description": "The network firewall defined for this vault."
+      }
     },
     "sku": {
-      "defaultValue": "Standard",
       "allowedValues": [
         "Standard",
         "standard",
         "Premium",
         "premium"
       ],
-      "type": "String",
+      "defaultValue": "Standard",
       "metadata": {
         "description": "SKU for the vault"
-      }
-    },
-    "accessPolicies": {
-      "defaultValue": [],
-      "type": "Array",
-      "metadata": {
-        "description": "The access policies defined for this vault."
-      }
+      },
+      "type": "string"
     },
     "tenant": {
-      "type": "String"
+      "type": "string"
     },
-    "enabledForDeployment": {
-      "type": "Bool"
-    },
-    "enabledForTemplateDeployment": {
-      "type": "Bool"
-    },
-    "enabledForDiskEncryption": {
-      "type": "Bool"
-    },
-    "networkAcls": {
-      "type": "Object",
-      "metadata": {
-        "description": "The network firewall defined for this vault."
-      }
+    "vaultName": {
+      "type": "string"
     }
   },
   "resources": [
     {
-      "type": "Microsoft.KeyVault/vaults",
-      "name": "[parameters('name')]",
       "apiVersion": "2016-10-01",
       "location": "[parameters('location')]",
+      "name": "[parameters('vaultName')]",
       "properties": {
-        "enabledForDeployment": "[parameters('enabledForDeployment')]",
-        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-        "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
         "accessPolicies": "[parameters('accessPolicies')]",
-        "tenantId": "[parameters('tenant')]",
+        "enabledForDeployment": "[parameters('enabledForDeployment')]",
+        "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+        "networkAcls": "[parameters('networkAcls')]",
         "sku": {
           "name": "[parameters('sku')]",
           "family": "A"
         },
-        "networkAcls": "[parameters('networkAcls')]"
-      }
+        "tenantId": "[parameters('tenant')]"
+      },
+      "type": "Microsoft.KeyVault/vaults"
     }
   ]
 }
