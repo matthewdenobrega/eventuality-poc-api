@@ -8,7 +8,6 @@ namespace EventualityPOCApi.Channel
 {
     public class ChannelRx
     {
-        private Action<StatementWrapper> _handler;
         private readonly Subject<StatementWrapper> _subject;
 
         #region Constructor
@@ -24,25 +23,19 @@ namespace EventualityPOCApi.Channel
             return _subject;
         }
 
-        public Task NextAsync(StatementWrapper statementWrapper)
+        public void Next(StatementWrapper statementWrapper)
         {
             _subject.OnNext(statementWrapper);
-
-            TriggerHandler(statementWrapper);
-
-            return Task.FromResult<object>(null);
         }
 
         public void RegisterHandler(Action<StatementWrapper> handler)
         {
-            _handler = handler;
+            _subject.Subscribe(handler);
         }
 
-        public void TriggerHandler(StatementWrapper statementWrapper)
+        public void RegisterHandlerAsync(Func<StatementWrapper, Task> handler)
         {
-            if (_handler == null) throw new InvalidOperationException();
-
-            _handler.Invoke(statementWrapper);
+            _subject.Subscribe(async (sw) => await handler(sw));
         }
         #endregion
     }

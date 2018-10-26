@@ -41,7 +41,7 @@ namespace EventualityPOCApi.Gateway.Component.PersonProfileContext
             {
                 var decisionStatement = await new PersonApplicationService().MakeDecisionAsync(statementWrapper.Data, _personRepository);
                 var decisionStatementWrapper = new StatementWrapper(statementWrapper.Subject, decisionStatement);
-                await _decisionChannel.NextAsync(decisionStatementWrapper);
+                _decisionChannel.Next(decisionStatementWrapper);
             }
             catch (Exception exception)
             {

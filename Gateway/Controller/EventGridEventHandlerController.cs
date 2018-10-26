@@ -50,7 +50,7 @@ namespace EventGridEventTrigger.DotNetCoreAPIApp.Controllers
                 {
                     var statement = new StatementExtension((JObject)eventGridEvent.Data);
                     var statementWrapper = new StatementWrapper(eventGridEvent.Subject, statement);
-                    _decisionChannel.TriggerHandler(statementWrapper);
+                    _decisionChannel.Next(statementWrapper);
                 }
             }
 

@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 
 namespace EventualityPOCApi.Gateway.Channel
 {
+    /*
+     * 
+     */
     public interface IChannel
     {
         IObservable<StatementWrapper> Observable();
-        Task NextAsync(StatementWrapper statementWrapper);
+        void Next(StatementWrapper statementWrapper);
         void RegisterHandler(Action<StatementWrapper> handler);
-        void TriggerHandler(StatementWrapper statementWrapper);
+        void RegisterHandlerAsync(Func<StatementWrapper, Task> handler);
     }
 
     public interface IDecisionChannel : IChannel { }

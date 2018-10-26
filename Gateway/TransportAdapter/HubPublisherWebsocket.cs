@@ -20,14 +20,10 @@ namespace EventualityPOCApi.Gateway.TransportAdapter
         #region Public
         public void RegisterOutgoingHandler()
         {
-            _decisionChannel.RegisterHandler(PushEventToHub);
-        }
-        #endregion
-
-        #region private
-        private void PushEventToHub(StatementWrapper statementWrapper)
-        {
-            _hubSubContext.Clients.Client(statementWrapper.Subject).SendAsync("Decision", statementWrapper.Data.ToJObject());
+            _decisionChannel.RegisterHandlerAsync(async (sw) =>
+            {
+                await _hubSubContext.Clients.Client(sw.Subject).SendAsync("Decision", sw.Data.ToJObject());
+            });
         }
         #endregion
     }

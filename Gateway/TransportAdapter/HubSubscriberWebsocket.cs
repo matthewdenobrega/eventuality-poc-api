@@ -2,7 +2,6 @@
 using EventualityPOCApi.Shared.Framework;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace EventualityPOCApi.Gateway.TransportAdapter
 {
@@ -18,10 +17,10 @@ namespace EventualityPOCApi.Gateway.TransportAdapter
         #endregion
 
         #region Public
-        public async Task Perception(JObject payload)
+        public void Perception(JObject payload)
         {
             var statementWrapper = new StatementWrapper(this.Context.ConnectionId, new Shared.Xapi.StatementExtension(payload));
-            await _perceptionChannel.NextAsync(statementWrapper);
+            _perceptionChannel.Next(statementWrapper);
         }
         #endregion
     }

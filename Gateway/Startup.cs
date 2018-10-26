@@ -80,17 +80,16 @@ namespace EventualityPOCApi.Gateway
             Configuration.Bind("EventGrid", eventGridConfiguration);
             services.AddSingleton(eventGridConfiguration);
 
+            services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
+            services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
+
             if (eventGridConfiguration.Enabled)
             {
                 services.AddSingleton(s => new EventGridClient(new TopicCredentials(eventGridConfiguration.PersonProfileContextPerceptionTopicKey)));
-                services.AddSingleton<IDecisionChannel, DecisionChannelEventGrid>();
-                services.AddSingleton<IPerceptionChannel, PerceptionChannelEventGrid>();
+                services.AddSingleton<PerceptionChannelAdapterEventGrid>();
             }
             else
             {
-                services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
-                services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();
-
                 // Individual components and their dependencies, seemlessly replaced by Azure functions in the cloud
                 services.AddSingleton(s => new DocumentClient(new Uri(cosmosDBConfiguration.AccountEndpoint), cosmosDBConfiguration.AccountKey));
                 services.AddSingleton<PersonComponent>();
@@ -102,7 +101,11 @@ namespace EventualityPOCApi.Gateway
         {
             serviceProvider.GetService<HubPublisherWebsocket>().RegisterOutgoingHandler();
 
-            if (!serviceProvider.GetService<EventGridConfiguration>().Enabled)
+            if (serviceProvider.GetService<EventGridConfiguration>().Enabled)
+            {
+                // Bind event grid adapter
+                serviceProvider.GetService<PerceptionChannelAdapterEventGrid>().Configure(serviceProvider.GetService<IPerceptionChannel>());
+            } else
             {
                 // Bind components
                 serviceProvider.GetService<PersonComponent>().Configure();
