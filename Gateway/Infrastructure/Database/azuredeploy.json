@@ -3,7 +3,6 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "apiType": {
-      "type": "string",
       "allowedValues": [
         "Cassandra",
         "Gremlin",
@@ -11,20 +10,15 @@
         "SQL",
         "Table"
       ],
-      "defaultValue": "Cassandra"
+      "defaultValue": "Cassandra",
+      "type": "string"
     },
     "databaseAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "The Azure Cosmos DB account name."
-      }
+      "type": "string"
     },
     "location": {
-      "type": "string",
       "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
-      }
+      "type": "string"
     }
   },
   "variables": {
@@ -33,10 +27,9 @@
   "resources": [
     {
       "apiVersion": "2015-04-08",
-      "type": "Microsoft.DocumentDB/databaseAccounts",
       "kind": "[if(equals(parameters('apiType'), 'MongoDB'), 'MongoDB', 'GlobalDocumentDB')]",
-      "name": "[parameters('databaseAccountName')]",
       "location": "[parameters('location')]",
+      "name": "[parameters('databaseAccountName')]",
       "properties": {
         "name": "[parameters('databaseAccountName')]",
         "databaseAccountOfferType": "[variables('offerType')]",
@@ -50,7 +43,8 @@
             "failoverPriority": 1
           }
         ]
-      }
+      },
+      "type": "Microsoft.DocumentDB/databaseAccounts"
     }
   ]
 }

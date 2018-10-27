@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "eventualitypoc-cloud-ppc-person-dev-func"
+      "value": "eventualitypoc-cloud-ppc-dev-func"
     },
     "cosmosDBAccountEndpoint": {
       "reference": {

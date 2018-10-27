@@ -6,7 +6,7 @@
       "value": "SQL"
     },
     "databaseAccountName": {
-      "value": "eventualitypoc-database-dev-cdb"
+      "value": "eventualitypoc-database-ppc-dev-cdb"
     }
   }
 }
