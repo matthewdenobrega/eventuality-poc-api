@@ -62,6 +62,9 @@ namespace EventualityPOCApi.Gateway
 
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().WithMethods("GET", "POST").AllowCredentials());
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseSignalR(routes => routes.MapHub<HubSubscriberWebsocket>("/eventHub"));
 
             app.UseMvc();
