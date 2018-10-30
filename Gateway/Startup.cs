@@ -42,7 +42,7 @@ namespace EventualityPOCApi.Gateway
 
             services.AddSingleton<HubPublisherWebsocket>();
 
-            AddGatewayServices(services);
+            AddConfigurationAndGatewayServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +60,8 @@ namespace EventualityPOCApi.Gateway
 
             loggerFactory.AddDebug();
 
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().WithMethods("GET", "POST").AllowCredentials());
+            var websocketConfiguration = serviceProvider.GetService<WebsocketConfiguration>();
+            app.UseCors(builder => builder.WithOrigins(websocketConfiguration.AllowUrls).AllowAnyHeader().WithMethods("GET", "POST").AllowCredentials());
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -74,14 +75,19 @@ namespace EventualityPOCApi.Gateway
         #endregion
 
         #region Private
-        private void AddGatewayServices(IServiceCollection services)
+        private void AddConfigurationAndGatewayServices(IServiceCollection services)
         {
             var cosmosDBConfiguration = new CosmosDBConfiguration();
             Configuration.Bind("CosmosDB", cosmosDBConfiguration);
             services.AddSingleton(cosmosDBConfiguration);
+
             var eventGridConfiguration = new EventGridConfiguration();
             Configuration.Bind("EventGrid", eventGridConfiguration);
             services.AddSingleton(eventGridConfiguration);
+
+            var websocketConfiguration = new WebsocketConfiguration();
+            Configuration.Bind("Websocket", websocketConfiguration);
+            services.AddSingleton(websocketConfiguration);
 
             services.AddSingleton<IDecisionChannel, DecisionChannelRx>();
             services.AddSingleton<IPerceptionChannel, PerceptionChannelRx>();

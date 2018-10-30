@@ -21,7 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonProfileCloud", "Perso
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2AB47C30-EF3A-4DE9-9F3D-6F1E95175C9B}"
 	ProjectSection(SolutionItems) = preProject
-		APPLICATION-FLOW.md = APPLICATION-FLOW.md
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection

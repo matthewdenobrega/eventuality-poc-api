@@ -39,6 +39,9 @@
     },
     "webAppName": {
       "value": "eventualitypoc-gateway-dev-wa"
+    },
+    "websocketAllowUrls": {
+      "value": [ "https://eventualitypoc-web-dev-wa.azurewebsites.net", "http://localhost:4200" ]
     }
   }
 }
